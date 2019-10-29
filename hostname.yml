@@ -1,8 +1,8 @@
 ---
 
 - hosts: all
-    remote_user: centos
-    become: yes
+  remote_user: centos
+  become: yes
 
   tasks:
     - name: Change the hostname to our standard
