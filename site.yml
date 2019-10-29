@@ -1,21 +1,13 @@
 ---
 - hosts: all
   remote_user: centos
-
-  vars:
-    # Timezone
-    timezone: 'Europe/Paris'
-
+  
   tasks:
     
     ###################
     # Time management
     ###################
-    - name: Set local timezone
-      copy: content={{ timezone }}
-            dest=/etc/timezone
-      notify: update tzdata
-
+    
     - name: Install NTP (and update apt cache for the first install)
       apt: name=ntp state=present
            update_cache=yes
