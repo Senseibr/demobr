@@ -3,30 +3,11 @@
   remote_user: centos
 
   vars:
-    # Username
-    user: myproject
     # Timezone
     timezone: 'Europe/Paris'
 
   tasks:
-
-    ###################
-    # User Management
-    ###################
-    - name: Create user {{ user }}
-      user: name={{ user }}
-            comment="{{ user }} user"
-            shell=/bin/bash
-
-    - name: Add {{ user }} to sudoers
-      template: src=templates/sudoers-user.j2
-                dest=/etc/sudoers.d/{{ user }}-sudoer
-                validate='visudo -cf %s'
-
-    - name: Add my public key to {{ user }}
-      authorized_key: user={{ user }}
-                      key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
+    
     ###################
     # Time management
     ###################
@@ -87,15 +68,6 @@
             state=absent
 
     ###################
-    # Supervisor
-    ###################
-    - name: Install Supervisor
-      apt: name=supervisor state=latest
-
-    - name: Start supervisor service
-      service: name=supervisor state=started enabled=true
-
-    ###################
     # Python / Virtualenv
     ###################
     - name: Install pip
@@ -104,54 +76,3 @@
     - name: Install virtualenv
       pip: name=virtualenv
 
-    ###################
-    # Deploying Django--an-app-at-a-time
-    ###################
-    - name: Git clone/pull Django--an-app-at-a-time
-      git: repo=https://github.com/sametmax/Django--an-app-at-a-time.git
-           dest=/home/{{ user }}/project
-      remote_user: "{{ user }}"
-
-    - name: Create a new requirement file
-      copy: src=files/requirements.txt
-            dest=/home/{{ user }}/project/requirements.txt
-      remote_user: "{{ user }}"
-
-    - name: Create virtualenv with requirements
-      pip: requirements=/home/{{ user }}/project/requirements.txt
-           virtualenv=/home/{{ user }}/venv
-      remote_user: "{{ user }}"
-
-    - name: Setup Gunicorn config
-      template: src=templates/gunicorn.conf.py.j2
-                dest=/home/{{ user }}/gunicorn.conf.py
-      remote_user: "{{ user }}"
-      notify: restart supervisor
-
-    - name: Setup supervisor config (to manage gunicorn)
-      template: src=templates/supervisor.conf.j2
-                dest=/etc/supervisor/conf.d/{{ user }}.conf
-      notify: restart supervisor
-
-    - name: Setup Nginx config for our app
-      template: src=templates/nginx.conf.j2
-                dest=/etc/nginx/sites-enabled/{{ user }}.conf
-      notify: restart nginx
-
-    - name: Deploy static files
-      command: /home/{{ user }}/venv/bin/python ./manage.py collectstatic --noinput
-               chdir=/home/{{ user }}/project/
-      remote_user: "{{ user }}"
-
-  ###################
-  # Handlers
-  ###################
-  handlers:
-    - name: reload iptables
-      action: shell /sbin/iptables-restore < /etc/iptables.up
-    - name: update tzdata
-      command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
-    - name: restart nginx
-      service: name=nginx state=restarted enabled=yes
-    - name: restart supervisor
-      service: name=supervisor state=restarted enabled=yes
