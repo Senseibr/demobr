@@ -11,6 +11,7 @@
     - name: Install NTP
       yum:
         name:
+          - epel-release
           - ntp 
           - vim
           - htop
