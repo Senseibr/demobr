@@ -14,8 +14,7 @@
           - epel-release
           - ntp 
           - vim
-          - htop
-
+         
     - name: Start the ntp service
       service: name=ntp state=started enabled=true
 
