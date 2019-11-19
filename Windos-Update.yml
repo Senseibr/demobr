@@ -1,3 +1,4 @@
+---
 # windows-updates-all.yml
 
 – hosts: all
