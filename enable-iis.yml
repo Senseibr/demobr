@@ -5,7 +5,6 @@
   tasks:
     - name: Install IIS
       remote_user: administrator
-      remote_password: (r(AR7NDHZ6yOTjmHWgyH;zQa)=M?ix8
       win_feature:
         name: "Web-Server"
         state: present
