@@ -4,7 +4,6 @@
 - name: Install IIS
   hosts: 34.253.204.252
   remote_user: administrator
-  remote_password: (r(AR7NDHZ6yOTjmHWgyH;zQa)=M?ix8
   gather_facts: false
   tasks:
     - name: Install IIS
