@@ -6,4 +6,7 @@
   remote_user: administrator
   become: yes
   gather_facts: false
+   tasks:
+  - name: ping
+    ping:
   
