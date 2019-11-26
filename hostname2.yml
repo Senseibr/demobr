@@ -1,6 +1,6 @@
 ---
 
-- hosts: ansible_inventory_sources
+- hosts: ansible_fqdn
   remote_user: centos
   become: yes
 
