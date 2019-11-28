@@ -1,6 +1,6 @@
 ---
 
-- hosts: ansible_fqdn
+- hosts: localhost
   remote_user: centos
   become: yes
 
@@ -28,8 +28,8 @@
       lineinfile:
         state=present
         dest=/etc/hosts
-        line="{{ ansible_all_ipv4.address }} {{ ec2_tag_Name }} {{ ansible_hostname }}"
-        regexp="^{{ ansible_all_ipv4.address }}"
+        line="{{ ansible_default_ipv4.address }} {{ ec2_tag_Name }} {{ ansible_hostname }}"
+        regexp="^{{ ansible_default_ipv4.address }}"
       when:
         ansible_fqdn != ec2_tag_Name
 
