@@ -1,8 +1,8 @@
 ---
 - hosts: all
-  gather_facts: True
+  gather_facts: yes
   remote_user: centos
-  become: True
+  become: yes
   tasks:
     
     - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
@@ -23,5 +23,10 @@
       lineinfile:
         state=present
         dest=/etc/hostname
-        regexp="^{{ ansible_hostname }}.+$"
-        line="{{ ec2_tag_Name }} {{ ansible_fqdn }} {{ ansible_hostname }}"
+        regexp="^{{ ansible_hostname }}"
+        line="{{ ec2_tag_Name }}"
+
+    - name: Installation de vim
+      yum:
+        name:
+          - vim
