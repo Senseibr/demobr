@@ -5,5 +5,12 @@
   become: yes
   tasks:
     - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
-    - debug: var=hostvars[inventory_hostname]['ec2_private_dns_name']['address']
-    - debug: var=hostvars[inventory_hostname]['ec2_ip_address']['address']
+    - name: Ensure hostname set
+      hostname: name={{ inventory_hostname }}
+      when: not inventory_hostname|match('(\d{1,3}\.){3}\d{1,3}')
+
+    - name: Ensure hostname is in /etc/hosts
+      lineinfile:
+        dest=/etc/hosts
+        regexp="^{{ ansible_default_ipv4.address }}.+$"
+        line="{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
