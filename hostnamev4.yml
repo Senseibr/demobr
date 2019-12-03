@@ -4,8 +4,7 @@
   remote_user: centos
   become: True
   tasks:
-    - debug:
-        msg: "{{ansible_mounts}}"
+    
     - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
     - debug: var=hostvars[inventory_hostname]['gateway']['address']
     - debug: 
@@ -19,3 +18,10 @@
         dest=/etc/hosts
         regexp="^{{ ansible_default_ipv4.address }}.+$"
         line="{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
+    
+    - name: Ensure hostname is in /etc/hostname
+      lineinfile:
+        state=present
+        dest=/etc/hostname
+        regexp="^{{ ansible_hostname }}.+$"
+        line="{{ ec2_tag_Name }} {{ ansible_fqdn }} {{ ansible_hostname }}"
