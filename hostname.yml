@@ -6,15 +6,13 @@
 
   tasks:
      - name: Display the config
-      debug:
         msg: "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
     
     - name: Display the config
-      debug:
         msg: "The hostname on AWS is {{ ec2_tag_Name }}"
 
     - name: Change the hostname to our standard
-      hostname:
+       hostname:
         name="{{ ec2_tag_Name }}"
       when:
         ansible_fqdn != ansible_ssh_host
