@@ -4,6 +4,7 @@
   remote_user: centos
   become: yes
   tasks:
+    - name: current host is {{ansible_hostname}}
     - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
     - name: Ensure hostname set
       hostname: name={{ inventory_hostname }}
