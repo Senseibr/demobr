@@ -5,4 +5,5 @@
   become: yes
   tasks:
     - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
-    - debug: var=hostvars[inventory_hostname]['ansible_default_ipv6']['address']
+    - debug: var=hostvars[inventory_hostname]['ec2_private_dns_name']['address']
+    - debug: var=hostvars[inventory_hostname]['ec2_ip_address']['address']
