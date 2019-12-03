@@ -4,9 +4,14 @@
   remote_user: centos
   become: True
   tasks:
+    - debug:
+        msg: "{{ansible_mounts}}"
     - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
     - debug: var=hostvars[inventory_hostname]['gateway']['address']
-    - debug: var="{{ansible_hostname}}"
+    - debug: 
+        msg: "{{ansible_hostname}}"
+    - debug: 
+        msg: "{{ansible_all_ipv4_addresses}}"
     
     - name: Ensure hostname is in /etc/hosts
       lineinfile:
