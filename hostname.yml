@@ -1,0 +1,49 @@
+---
+
+- hosts: all
+  remote_user: centos
+  become: yes
+
+  tasks:
+    - name: Display the config
+      debug:
+        msg: "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
+    
+    - name: Display the config
+      debug:
+        msg: "The hostname on AWS is {{ ec2_tag_Name }}"
+
+    - name: Change the hostname to our standard
+      hostname:
+        name="{{ ec2_tag_Name }}"
+      when:
+        ansible_fqdn != ansible_ssh_host
+
+    - name: restart machine
+      command: shutdown -r now "Ansible updates triggered"
+      async: 0
+      poll: 0
+      ignore_errors: True
+      when:
+        reboot is defined
+
+    - name: Waiting for server to come back up
+      local_action: wait_for host="{{ ec2_tag_Name }}" port=22 state=started
+
+    - name: Fix /etc/hosts removing the old hostname
+      tags:
+        - hosts
+      lineinfile:
+        state=present
+        dest=/etc/hosts
+        line="{{ ansible_default_ipv4.address }} {{ ec2_tag_Name }} {{ ansible_hostname }}"
+        regexp="^{{ ansible_default_ipv4.address }}"
+      when:
+        ansible_fqdn != ec2_tag_Name
+
+    - name: Validate ansible_fqdn == ec2_tag_Name
+      tags:
+        - validate
+      assert:
+        that:
+          ansible_fqdn == ec2_tag_Name
