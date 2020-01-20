@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  remote_user: centos
+
+  tasks:
+    - name: Installation des paquets
+      yum:
+        name:
+          - mariadb-server
+
+    - name: Activation des services
+      service:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      with_items:
+        - mariadb
+
+...
