@@ -41,13 +41,13 @@
         that:
           ansible_fqdn == ec2_tag_Name
           
-   - name: Installation des paquets
+    - name: Installation des paquets
       sudo: yes
       yum:
         name:
           - mariadb-server
 
-   - name: Activation des services
+    - name: Activation des services
       sudo: yes
       service:
         name: "{{ item }}"
@@ -55,5 +55,3 @@
         state: started
       with_items:
         - mariadb
-          
-          
