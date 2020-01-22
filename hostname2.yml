@@ -23,7 +23,7 @@
       local_action: wait_for host="{{ ansible_hostname }}" port=22 state=started
 
     - name: Fix /etc/hosts removing the old hostname
-      sudo: yes
+      
       tags:
         - hosts
       lineinfile:
@@ -42,13 +42,13 @@
           ansible_fqdn == ec2_tag_Name
           
     - name: Installation des paquets
-      sudo: yes
+      
       yum:
         name:
           - mariadb-server
 
     - name: Activation des services
-      sudo: yes
+      
       service:
         name: "{{ item }}"
         enabled: yes
